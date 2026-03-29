@@ -4,7 +4,10 @@ from datetime import datetime, timedelta
 
 # ==================== 页面配置 ====================
 st.set_page_config(page_title="山海追剧", page_icon="🐉", layout="wide")
-
+# --- 在这里添加客服代码（放在所有侧边栏内容之后） ---
+    st.markdown("---")  # 用分割线和上面的导航分开
+    st.markdown("### 🤖 AI 客服")
+    ai_customer_service()  # 调用客服函数
 # ==================== 解析接口 ====================
 PARSE_APIS = {
     "主接口": "https://jx.xmflv.cc/?url=",
