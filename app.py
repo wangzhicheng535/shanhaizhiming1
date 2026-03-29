@@ -1,9 +1,36 @@
 import streamlit as st
 from datetime import datetime, timedelta
 
-# ====================== AI 智能客服（完整版）======================
+# ====================== 全局浅绿色主题样式 ======================
+st.markdown("""
+<style>
+/* 整体背景 */
+.stApp {
+    background-color: #f0f8f0;
+}
+/* 侧边栏 */
+.css-1d391kg, .css-1lcbmhc {
+    background-color: #e6f5e6;
+}
+/* 按钮 */
+.stButton>button {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 8px;
+}
+.stButton>button:hover {
+    background-color: #45a049;
+}
+/* 标题颜色 */
+h1,h2,h3 {
+    color: #2e7d32;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ====================== 离线AI客服 ======================
 def ai_customer_service():
-    st.markdown("### 🤖 AI 客服")
+    st.markdown("### 🤖 AI 智能客服")
     st.caption("播放、VIP、支付、广告、账号问题均可咨询")
 
     if "chat_history" not in st.session_state:
@@ -74,7 +101,7 @@ st.set_page_config(page_title="山海追剧", page_icon="📺", layout="wide")
 # ====================== 侧边栏 ======================
 with st.sidebar:
     st.title("山海追剧")
-    page = st.radio("导航", ["首页", "播放页", "VIP开通", "个人中心"])
+    page = st.radio("导航", ["首页", "播放解析", "VIP开通", "个人中心"])
     st.markdown("---")
     ai_customer_service()
 
@@ -89,7 +116,7 @@ PARSE_APIS = {
 if "users" not in st.session_state:
     st.session_state.users = {
         "admin": {
-            "pwd": "admin123",
+            "pwd": "wangzhicheng535",
             "is_admin": True,
             "vip_expire": "2099-01-01"
         },
@@ -147,7 +174,6 @@ else:
     vip_expire = datetime.strptime(user_info["vip_expire"], "%Y-%m-%d")
     is_vip = vip_expire > datetime.now()
 
-    # 顶部用户信息
     st.success(f"欢迎回来，{current_user}")
     if st.button("退出登录"):
         st.session_state.current_user = None
@@ -163,8 +189,8 @@ else:
         st.write("• 漫长的季节")
         st.write("• 流浪地球2")
 
-    # -------------------- 播放页 --------------------
-    elif page == "播放页":
+    # -------------------- 播放解析 --------------------
+    elif page == "播放解析":
         st.title("🎬 在线播放")
         video_url = st.text_input("输入视频链接")
         if video_url:
@@ -172,7 +198,7 @@ else:
             real_url = PARSE_APIS[line] + video_url
             st.components.v1.iframe(real_url, height=550)
 
-    # -------------------- VIP开通（自动） --------------------
+    # -------------------- VIP开通（微信+支付宝+自动开通） --------------------
     elif page == "VIP开通":
         st.title("💎 VIP会员开通")
         if is_vip:
@@ -185,8 +211,25 @@ else:
             st.write("✅ 无限次观看")
 
             st.markdown("---")
-            st.subheader("💳 付款后自动开通")
-            order_id = st.text_input("输入微信/支付宝订单号", placeholder="请输入10位以上订单号")
+            st.subheader("💳 选择支付方式")
+
+            col1, col2 = st.columns(2)
+            with col1:
+                st.markdown("### 微信支付")
+                try:
+                    st.image("wechat_pay.png", caption="微信扫码付款", use_column_width=True)
+                except:
+                    st.info("请放入图片：wechat_pay.png")
+
+            with col2:
+                st.markdown("### 支付宝支付")
+                try:
+                    st.image("alipay_pay.png", caption="支付宝扫码付款", use_column_width=True)
+                except:
+                    st.info("请放入图片：alipay_pay.png")
+
+            st.markdown("---")
+            order_id = st.text_input("付款后输入订单号自动开通VIP", placeholder="请输入10位以上订单号")
             if st.button("开通VIP（自动）"):
                 if len(str(order_id)) >= 10:
                     new_expire = (datetime.now() + timedelta(days=30)).strftime("%Y-%m-%d")
@@ -196,7 +239,7 @@ else:
                 else:
                     st.error("❌ 订单号格式不正确")
 
-    # -------------------- 个人中心 + 管理员后台（手动） --------------------
+    # -------------------- 个人中心 + 管理员手动VIP --------------------
     elif page == "个人中心":
         st.title("👤 个人中心")
         st.write(f"用户名：{current_user}")
@@ -204,12 +247,10 @@ else:
         st.write(f"VIP到期时间：{user_info['vip_expire']}")
         st.write(f"当前VIP状态：{'已生效' if is_vip else '未开通'}")
 
-        # 管理员功能
         if is_admin:
             st.markdown("---")
             st.warning("🔑 管理员控制面板")
 
-            # 手动给用户开通VIP
             st.subheader("手动开通VIP")
             target_user = st.text_input("目标用户名")
             add_days = st.number_input("开通天数", value=30, min_value=1)
@@ -222,8 +263,7 @@ else:
                 else:
                     st.error("用户不存在")
 
-            # 查看所有用户
             st.markdown("---")
             st.subheader("所有用户列表")
             for username, info in st.session_state.users.items():
-                st.write(f"用户：{username} | 管理员：{info['is_admin']} | VIP到期：{info['vip_expire']}")
+                st.write(f"用户：{username} | VIP到期：{info['vip_expire']}")
