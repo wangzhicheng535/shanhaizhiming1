@@ -4,10 +4,22 @@ from datetime import datetime, timedelta
 
 # ==================== 页面配置 ====================
 st.set_page_config(page_title="山海追剧", page_icon="🐉", layout="wide")
-# --- 在这里添加客服代码（放在所有侧边栏内容之后） ---
-    st.markdown("---")  # 用分割线和上面的导航分开
-    st.markdown("### 🤖 AI 客服")
-    ai_customer_service()  # 调用客服函数
+# ============== 侧边栏导航（新增） ==============
+with st.sidebar:
+    st.title("山海追剧")
+    page = st.radio("导航", ["首页", "播放页", "VIP开通", "我的"])
+    
+    # --- 分割线 + AI 客服（缩进在 sidebar 里）---
+    st.markdown("---")
+    st.markdown("### 🤖 AI 智能客服")
+    ai_customer_service()
+
+# ============== 解析接口 ==============
+PARSE_APIS = {
+    "主接口": "https://jx.xmflv.cc/?url=",
+    "备用1": "https://www.jxhdzy.com/?url=",
+    "备用2": "https://jx.aidouer.net/?url=",
+}
 # ==================== 解析接口 ====================
 PARSE_APIS = {
     "主接口": "https://jx.xmflv.cc/?url=",
