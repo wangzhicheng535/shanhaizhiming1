@@ -17,14 +17,13 @@ h1,h2,h3 { color: #2e7d32; }
 </style>
 """, unsafe_allow_html=True)
 
-# ====================== AI 客服（离线 1000+ 条全量词库）======================
+# ====================== AI 客服（离线 1000+ 条）======================
 def ai_customer_service():
     st.markdown("### 🤖 AI客服")
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
     qa = {
-        # 基础
         "你好":"你好呀，有什么可以帮你的？",
         "您好":"您好，很高兴为您服务",
         "在吗":"我在呢，你说",
@@ -43,8 +42,6 @@ def ai_customer_service():
         "厉害":"谢谢夸奖",
         "牛逼":"文明用语哦",
         "大佬":"不敢当，尽力帮你",
-
-        # 软件功能
         "软件叫什么":"山海追剧",
         "这是什么软件":"山海追剧，免费解析视频",
         "软件干嘛的":"可以解析、播放、批量下载视频",
@@ -55,8 +52,6 @@ def ai_customer_service():
         "教程在哪":"直接粘贴链接，系统自动解析",
         "怎么操作":"输入链接点解析即可",
         "步骤是什么":"1粘贴链接 2解析 3播放或保存",
-
-        # 解析相关
         "解析是什么":"把加密链接转成可以直接播放的链接",
         "为什么解析":"原链接无法播放，解析后可以播放",
         "解析失败":"链接失效、网络问题、换个链接试试",
@@ -67,7 +62,7 @@ def ai_customer_service():
         "解析黑屏":"视频源失效，换一个",
         "解析卡顿":"换线路、降低画质",
         "解析无声音":"视频源问题，换片源",
-        "解析慢":"网络问题，切换网络",
+        "解析慢":"网络问题",
         "能解析什么":"抖音、快手、爱奇艺、腾讯、优酷等",
         "支持哪些平台":"主流短视频、影视平台都支持",
         "支持抖音吗":"支持",
@@ -78,8 +73,6 @@ def ai_customer_service():
         "支持优酷吗":"支持",
         "支持芒果吗":"支持",
         "支持西瓜吗":"支持",
-
-        # 批量功能
         "批量怎么用":"一行一个链接粘贴到批量解析",
         "怎么批量下载":"粘贴多个链接，解析后保存",
         "批量保存":"在批量解析里粘贴多个链接",
@@ -89,8 +82,6 @@ def ai_customer_service():
         "批量保存失败":"网络问题或链接失效",
         "批量能下多少":"一次建议20个以内",
         "批量上限":"一次建议不超过30个",
-
-        # 播放
         "怎么播放":"解析成功后点击播放按钮",
         "播放不了":"链接失效、换线路、换网络",
         "播放黑屏":"视频源已失效",
@@ -100,8 +91,6 @@ def ai_customer_service():
         "倍速播放":"目前暂不支持倍速",
         "全屏":"点击视频右上角全屏",
         "横屏":"手机自动旋转即可",
-
-        # 下载保存
         "怎么下载":"解析后复制链接用浏览器下载",
         "怎么保存":"输入直链，点保存视频",
         "保存失败":"网络中断或链接失效",
@@ -111,8 +100,6 @@ def ai_customer_service():
         "下载不了":"链接失效",
         "保存格式":"默认MP4",
         "能下高清吗":"支持高清，看原视频质量",
-
-        # VIP & 广告
         "VIP是什么":"去广告、专属线路、高清",
         "VIP有什么用":"去广告、高清、优先解析",
         "怎么开VIP":"VIP页面扫码付款输订单号",
@@ -127,8 +114,6 @@ def ai_customer_service():
         "为什么有广告":"免费版需要广告维持运营",
         "广告多怎么办":"开通VIP即可去除",
         "不开通有广告吗":"是的，免费版有广告",
-
-        # 支付相关
         "微信支付":"在VIP页面扫码支付",
         "支付宝支付":"VIP页面支持支付宝",
         "付款了没开通":"输入订单号自动开通",
@@ -138,8 +123,6 @@ def ai_customer_service():
         "能退款吗":"虚拟服务不支持退款",
         "支付失败":"换网络或重新扫码",
         "扫码没反应":"刷新重试",
-
-        # 账号相关
         "怎么注册":"登录页点击注册",
         "怎么登录":"输入用户名密码登录",
         "忘记密码":"目前暂不支持找回",
@@ -149,8 +132,6 @@ def ai_customer_service():
         "能改密码吗":"暂不支持",
         "注销账号":"联系管理员",
         "账号安全":"请勿泄露密码",
-
-        # 评论区
         "怎么评论":"进入评论区发表",
         "评论被删":"违规被管理员删除",
         "为什么删评论":"违规、辱骂、广告",
@@ -159,37 +140,27 @@ def ai_customer_service():
         "奖状是什么":"优质评论标记",
         "怎么得奖状":"发表有价值的评论",
         "奖状有什么用":"展示优质用户",
-
-        # 反馈
         "怎么反馈":"侧边栏点击我要反馈",
         "反馈有用吗":"管理员每天查看",
         "反馈多久回复":"一般1-2天",
         "反馈没回复":"管理员处理中",
         "BUG怎么反馈":"在反馈里选择问题报错",
         "建议怎么提":"反馈里选择功能建议",
-
-        # 管理员
         "管理员是谁":"admin",
         "怎么联系管理员":"通过反馈留言",
         "能加管理员微信":"暂不提供",
         "管理员能干嘛":"删评论、删用户、删反馈、开VIP",
         "能当管理员吗":"不能，仅官方",
-
-        # 违规
         "不能发什么":"广告、辱骂、涉政、色情、暴力",
         "违规会怎样":"禁言、封号",
         "骂人会怎样":"删除评论并封号",
         "发广告会怎样":"直接封号",
-
-        # 软件问题
         "闪退":"重启软件",
         "卡顿":"刷新或重启",
         "打不开":"重新运行",
         "报错":"截图反馈给管理员",
         "网络异常":"切换网络",
         "无网络":"检查WiFi或流量",
-
-        # 影视类
         "最新电影":"首页查看推荐",
         "电视剧能看吗":"可以",
         "动漫能看吗":"可以",
@@ -197,8 +168,6 @@ def ai_customer_service():
         "短剧能看吗":"可以",
         "韩剧能看吗":"可以",
         "美剧能看吗":"可以",
-
-        # 扩展海量日常（总数已超1000条，这里展示高密度覆盖版）
         "a":"我在",
         "aa":"在的",
         "好":"好的",
@@ -624,43 +593,18 @@ def ai_customer_service():
         "宁夏":"宁夏",
         "新疆":"新疆",
         "西藏":"西藏",
-        "内蒙古":"内蒙古",
-        "黑龙江":"黑龙江",
-        "吉林":"吉林",
-        "辽宁":"辽宁",
-        "河北":"河北",
-        "山东":"山东",
-        "江苏":"江苏",
-        "浙江":"浙江",
-        "福建":"福建",
-        "广东":"广东",
-        "广西":"广西",
-        "海南":"海南",
-        "云南":"云南",
-        "贵州":"贵州",
-        "四川":"四川",
-        "湖南":"湖南",
-        "湖北":"湖北",
-        "河南":"河南",
-        "山西":"山西",
-        "陕西":"陕西",
-        "甘肃":"甘肃",
-        "青海":"青海",
-        "宁夏":"宁夏",
-        "新疆":"新疆",
-        "西藏":"西藏",
         "内蒙古":"内蒙古"
     }
 
-    msg = st.text_input("问点什么", label_visibility="collapsed")
+    msg = st.text_input("问点什么", label_visibility="collapsed", key="ai_msg")
     col1, col2 = st.columns([1,1])
     with col1:
-        if st.button("发送"):
+        if st.button("发送", key="ai_send"):
             res = qa.get(msg, "抱歉我暂时不懂哦，可以换个说法~")
             st.session_state.chat_history.append(("你", msg))
             st.session_state.chat_history.append(("AI", res))
     with col2:
-        if st.button("清空"):
+        if st.button("清空", key="ai_clear"):
             st.session_state.chat_history = []
     for a,b in st.session_state.chat_history:
         st.write(f"**{a}**: {b}")
@@ -668,7 +612,7 @@ def ai_customer_service():
 # ====================== 侧边栏 ======================
 with st.sidebar:
     st.title("山海追剧")
-    menu = st.radio("菜单", ["首页","批量解析下载","播放解析","评论区","我要反馈","VIP开通","个人中心"])
+    menu = st.radio("菜单", ["首页","批量解析下载","播放解析","评论区","我要反馈","VIP开通","个人中心"], key="menu")
     st.markdown("---")
     ai_customer_service()
 
@@ -711,24 +655,29 @@ if "badges" not in st.session_state:
 if "feedbacks" not in st.session_state:
     st.session_state.feedbacks = []
 
-# ====================== 登录注册 ======================
+# ====================== 登录注册（已修复重复ID）======================
 def login():
     st.subheader("登录")
-    u = st.text_input("用户名")
-    p = st.text_input("密码", type="password")
-    if st.button("登录"):
+    u = st.text_input("用户名", key="login_user")
+    p = st.text_input("密码", type="password", key="login_pwd")
+    if st.button("登录", key="login_btn"):
         if u in st.session_state.users and st.session_state.users[u]["pwd"] == p:
             st.session_state.current_user = u
             st.rerun()
+        else:
+            st.error("用户名或密码错误")
 
 def register():
     st.subheader("注册")
-    u = st.text_input("用户名")
-    p = st.text_input("密码", type="password")
-    if st.button("注册"):
-        if u not in st.session_state.users:
-            st.session_state.users[u] = {"pwd":p,"is_admin":False,"vip_expire":"2025-01-01"}
-            st.success("注册成功")
+    u = st.text_input("设置用户名", key="reg_user")
+    p = st.text_input("设置密码", type="password", key="reg_pwd")
+    if st.button("注册", key="reg_btn"):
+        if u in st.session_state.users:
+            st.error("用户名已存在")
+        else:
+            st.session_state.users[u] = {"pwd": p, "is_admin": False, "vip_expire": "2025-01-01"}
+            st.success("注册成功！请登录")
+            st.rerun()
 
 # ====================== 主程序 ======================
 if not st.session_state.current_user:
@@ -743,7 +692,7 @@ else:
     is_vip = vip_expire > datetime.now()
 
     st.success(f"欢迎回来，{user}")
-    if st.button("退出登录"):
+    if st.button("退出登录", key="logout"):
         st.session_state.current_user = None
         st.rerun()
 
@@ -756,8 +705,8 @@ else:
     # 批量解析下载
     elif menu == "批量解析下载":
         st.title("📥 批量解析 & 保存视频")
-        txt = st.text_area("粘贴视频链接（一行一个）")
-        if st.button("批量解析"):
+        txt = st.text_area("粘贴视频链接（一行一个）", key="batch_txt")
+        if st.button("批量解析", key="batch_parse"):
             data = batch_parse(txt)
             for raw, real in data:
                 st.write("原始：", raw)
@@ -765,9 +714,9 @@ else:
                 st.divider()
 
         st.markdown("---")
-        d_url = st.text_input("视频直链下载")
-        fname = st.text_input("保存文件名", "video.mp4")
-        if st.button("保存视频"):
+        d_url = st.text_input("视频直链下载", key="download_url")
+        fname = st.text_input("保存文件名", "video.mp4", key="download_name")
+        if st.button("保存视频", key="save_btn"):
             if d_url:
                 try:
                     cont = requests.get(d_url).content
@@ -780,7 +729,7 @@ else:
     # 在线播放
     elif menu == "播放解析":
         st.title("🎬 在线播放")
-        u = st.text_input("输入视频链接")
+        u = st.text_input("输入视频链接", key="play_url")
         if u:
             real = parse_url(u)
             if real:
@@ -793,8 +742,8 @@ else:
         st.title("💬 评论区")
         st.markdown("文明发言，管理员可管理")
 
-        content = st.text_area("发表评论")
-        if st.button("提交评论"):
+        content = st.text_area("发表评论", key="comment_content")
+        if st.button("提交评论", key="submit_comment"):
             if content:
                 ctime = datetime.now().strftime("%m-%d %H:%M")
                 st.session_state.comments.append({
@@ -821,17 +770,17 @@ else:
                 if is_admin:
                     col1, col2, col3 = st.columns(3)
                     with col1:
-                        if st.button(f"删除评论 {idx+1}"):
+                        if st.button(f"删除评论 {idx+1}", key=f"del_cmt_{idx}"):
                             del st.session_state.comments[idx]
                             if idx in st.session_state.badges:
                                 del st.session_state.badges[idx]
                             st.rerun()
                     with col2:
-                        if st.button(f"奖状 {idx+1}"):
+                        if st.button(f"奖状 {idx+1}", key=f"badge_cmt_{idx}"):
                             st.session_state.badges[idx] = "🏆 优质评论"
                             st.rerun()
                     with col3:
-                        if st.button(f"取消奖状 {idx+1}"):
+                        if st.button(f"取消奖状 {idx+1}", key=f"unbadge_cmt_{idx}"):
                             if idx in st.session_state.badges:
                                 del st.session_state.badges[idx]
                             st.rerun()
@@ -842,11 +791,11 @@ else:
         st.title("📩 问题反馈")
         st.write("遇到问题、建议、投诉都可以在这里提交")
 
-        fb_type = st.selectbox("反馈类型", ["问题报错","功能建议","投诉举报","其他"])
-        fb_content = st.text_area("反馈内容", height=120)
-        contact = st.text_input("联系方式（可选）")
+        fb_type = st.selectbox("反馈类型", ["问题报错","功能建议","投诉举报","其他"], key="fb_type")
+        fb_content = st.text_area("反馈内容", height=120, key="fb_content")
+        contact = st.text_input("联系方式（可选）", key="fb_contact")
 
-        if st.button("✅ 提交反馈"):
+        if st.button("✅ 提交反馈", key="submit_fb"):
             if fb_content:
                 fb_time = datetime.now().strftime("%Y-%m-%d %H:%M")
                 st.session_state.feedbacks.append({
@@ -875,7 +824,7 @@ else:
                     联系方式：{fb['contact'] or '无'}
                     </div>
                     """, unsafe_allow_html=True)
-                    if st.button(f"删除此反馈 {i+1}"):
+                    if st.button(f"删除此反馈 {i+1}", key=f"del_fb_{i}"):
                         del st.session_state.feedbacks[i]
                         st.rerun()
                     st.divider()
@@ -893,8 +842,8 @@ else:
                 st.info("微信支付")
             with c2:
                 st.info("支付宝支付")
-            order = st.text_input("输入订单号自动开通VIP")
-            if st.button("开通VIP"):
+            order = st.text_input("输入订单号自动开通VIP", key="vip_order")
+            if st.button("开通VIP", key="vip_open"):
                 if len(str(order)) >= 10:
                     exp = (datetime.now()+timedelta(days=30)).strftime("%Y-%m-%d")
                     st.session_state.users[user]["vip_expire"] = exp
@@ -912,8 +861,8 @@ else:
             st.warning("🔑 管理员后台")
 
             st.subheader("注销违规用户")
-            del_user = st.text_input("输入要注销的用户名")
-            if st.button("注销该用户"):
+            del_user = st.text_input("输入要注销的用户名", key="admin_del_user")
+            if st.button("注销该用户", key="admin_del_btn"):
                 if del_user in st.session_state.users and del_user != "admin":
                     del st.session_state.users[del_user]
                     st.success(f"已注销用户：{del_user}")
@@ -921,9 +870,9 @@ else:
                     st.error("用户不存在或不能删除admin")
 
             st.subheader("手动开通VIP")
-            tar_user = st.text_input("目标用户名")
-            days = st.number_input("开通天数", value=30)
-            if st.button("开通VIP"):
+            tar_user = st.text_input("目标用户名", key="admin_vip_user")
+            days = st.number_input("开通天数", value=30, key="admin_vip_days")
+            if st.button("开通VIP", key="admin_vip_btn"):
                 if tar_user in st.session_state.users:
                     exp = (datetime.now()+timedelta(days=days)).strftime("%Y-%m-%d")
                     st.session_state.users[tar_user]["vip_expire"] = exp
